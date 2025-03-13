@@ -1,0 +1,22 @@
+{
+    "explanations": [
+      {
+        "concept": "arrays",
+        "theme": "jewelry",
+        "age_group": "Kids 8-12",
+        "explanation": "Think of an array like a charm bracelet! Each charm is an item in your array, and they're all lined up in a specific order. Just like you can count along your bracelet - 'first charm, second charm, third charm' - you can access items in an array by their position number. And just like you can add or remove charms from your bracelet, you can add or remove items from your array!"
+      },
+      {
+        "concept": "variables",
+        "theme": "backpack",
+        "age_group": "Kids 5-8",
+        "explanation": "A variable is like your favorite backpack! You give it a special name (like 'my sparkly unicorn backpack'), and then you can put different things inside it. One day you might store your lunch in it, another day your books, and the next day your favorite toy. Just like your backpack can hold different things on different days, a variable can store different values when your program runs."
+      },
+      {
+        "concept": "loops",
+        "theme": "dance",
+        "age_group": "Kids 8-12",
+        "explanation": "A loop in programming is like learning a dance routine! When you practice a dance, you repeat the same moves over and over until you get them right. In a 'for loop', you know exactly how many times you'll repeat the moves - like doing 8 twirls. In a 'while loop', you keep repeating until something changes - like dancing until the music stops!"
+      }
+    ]
+  }

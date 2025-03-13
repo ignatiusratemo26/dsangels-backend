@@ -1,0 +1,17 @@
+{
+    "1": {
+      "1": "Think about how you might organize your items in order. What helps you find things quickly in your room?",
+      "2": "Have you considered using an array to store and sort your values?",
+      "3": "Remember that arrays have a sort() method that can arrange the items from smallest to largest."
+    },
+    "2": {
+      "1": "Remember that computers follow instructions exactly as you write them - in order.",
+      "2": "You need to repeat an action multiple times. Is there a way to avoid writing the same code over and over?",
+      "3": "Try using a for loop that counts from 1 to 5, and then prints each number."
+    },
+    "3": {
+      "1": "Think about how you would check if something is true or false.",
+      "2": "You'll need to use an if statement to make decisions in your code.",
+      "3": "Your if statement should check if the user's number is greater than, equal to, or less than the secret number."
+    }
+  }

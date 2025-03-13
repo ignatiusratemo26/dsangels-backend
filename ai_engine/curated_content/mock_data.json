@@ -1,0 +1,13 @@
+{
+    "text_responses": {
+      "loops": "A loop is like a merry-go-round that keeps spinning until someone says stop! It helps us repeat actions without writing the same code over and over.",
+      "variables": "Variables are like magical containers that can hold different things. You name them whatever you want, and then put values inside them!",
+      "arrays": "An array is like a train with many cars. Each car can hold something different, and they all stay in order from front to back.",
+      "functions": "A function is like a recipe card. It has a name, a list of ingredients (parameters), and instructions to follow.",
+      "conditional": "Conditionals are like choosing your own adventure book. If this happens, do this. Otherwise, do that!"
+    },
+    "themed_explanations": {
+      "princess_arrays": "Think of an array like a royal jewelry box! Each section holds a precious gem (element), and they're all numbered in order so the princess can find them easily.",
+      "space_loops": "A loop is like a spaceship orbiting a planet. It keeps going around and around until its mission is complete or it runs out of fuel!"
+    }
+  }
