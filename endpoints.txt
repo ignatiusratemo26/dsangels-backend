@@ -1,0 +1,572 @@
+# DSAngels API Endpoints Documentation
+
+## Authentication Endpoints
+
+### Register User
+- **URL**: `/api/auth/register/`
+- **Method**: `POST`
+- **Input**:
+  - `username` (string): User's username
+  - `email` (string): User's email
+  - `password` (string): User's password
+  - `password2` (string): Password confirmation
+  - `display_name` (string, optional): User's display name
+  - `age_group` (integer, optional): ID of user's age group
+- **Output**:
+  - `id` (integer): User ID
+  - `username` (string): User's username
+  - `email` (string): User's email
+  - `display_name` (string): User's display name
+  - `token` (string): Authentication token
+
+### Register Parent
+- **URL**: `/api/auth/register/parent/`
+- **Method**: `POST`
+- **Input**:
+  - `username` (string): Parent's username
+  - `email` (string): Parent's email
+  - `password` (string): Parent's password
+  - `password2` (string): Password confirmation
+  - `display_name` (string, optional): Parent's display name
+  - `child_username` (string): Child user's username
+  - `child_email` (string, optional): Child's email
+  - `child_age_group` (integer): ID of child's age group
+- **Output**:
+  - `id` (integer): Parent ID
+  - `username` (string): Parent's username
+  - `email` (string): Parent's email
+  - `display_name` (string): Parent's display name
+  - `token` (string): Authentication token
+  - `child` (object): Child user data
+
+### Register Mentor
+- **URL**: `/api/auth/register/mentor/`
+- **Method**: `POST`
+- **Input**:
+  - `username` (string): Mentor's username
+  - `email` (string): Mentor's email
+  - `password` (string): Mentor's password
+  - `password2` (string): Password confirmation
+  - `display_name` (string, optional): Mentor's display name
+  - `expertise` (string): Mentor's area of expertise
+  - `bio` (string): Mentor's bio
+  - `years_experience` (integer): Years of experience
+- **Output**:
+  - `id` (integer): Mentor ID
+  - `username` (string): Mentor's username
+  - `email` (string): Mentor's email
+  - `display_name` (string): Mentor's display name
+  - `token` (string): Authentication token
+  - `mentor_profile` (object): Mentor profile data
+
+### Login
+- **URL**: `/api/auth/login/`
+- **Method**: `POST`
+- **Input**:
+  - `username` (string): User's username
+  - `password` (string): User's password
+- **Output**:
+  - `refresh` (string): Refresh token
+  - `access` (string): Access token
+  - `user` (object): User data
+
+### Logout
+- **URL**: `/api/auth/logout/`
+- **Method**: `POST`
+- **Input**:
+  - `refresh` (string): Refresh token
+- **Output**:
+  - `success` (boolean): Logout status
+
+### Refresh Token
+- **URL**: `/api/auth/token/refresh/`
+- **Method**: `POST`
+- **Input**:
+  - `refresh` (string): Refresh token
+- **Output**:
+  - `access` (string): New access token
+
+### User Profile
+- **URL**: `/api/auth/profile/`
+- **Method**: `GET`
+- **Input**: None
+- **Output**:
+  - `id` (integer): User ID
+  - `username` (string): User's username
+  - `email` (string): User's email
+  - `display_name` (string): User's display name
+  - `avatar` (string): URL to user's avatar
+  - `date_joined` (datetime): Registration date
+  - `profile_type` (string): Type of user (learner, parent, mentor)
+  - `age_group` (object, optional): User's age group info
+  - `parent` (object, optional): Parent info if applicable
+  - `mentor_profile` (object, optional): Mentor profile if applicable
+
+- **Method**: `PUT`/`PATCH`
+- **Input**:
+  - `display_name` (string, optional): New display name
+  - `avatar` (file, optional): New avatar image
+  - `bio` (string, optional): Biography
+  - `interests` (array, optional): List of interests
+- **Output**: Updated user profile object
+
+### Change Password
+- **URL**: `/api/auth/change-password/`
+- **Method**: `POST`
+- **Input**:
+  - `old_password` (string): Current password
+  - `new_password` (string): New password
+  - `new_password2` (string): New password confirmation
+- **Output**:
+  - `success` (boolean): Password change status
+  - `message` (string): Success/error message
+
+## Content Endpoints
+
+### Content List
+- **URL**: `/api/content/`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `content_type` (string, optional): Filter by content type
+  - `difficulty` (integer, optional): Filter by difficulty level
+  - `age_group` (integer, optional): Filter by age group
+  - `search` (string, optional): Search query
+  - `ordering` (string, optional): Sort field
+  - `page` (integer, optional): Page number
+  - `page_size` (integer, optional): Items per page
+- **Output**:
+  - `count` (integer): Total number of items
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of content objects
+
+### Content Detail
+- **URL**: `/api/content/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Content ID
+  - `title` (string): Content title
+  - `description` (string): Content description
+  - `content_type` (string): Type of content
+  - `difficulty_base` (integer): Base difficulty level
+  - `age_group` (object): Target age group
+  - `created_at` (datetime): Creation date
+  - `updated_at` (datetime): Last update date
+  - `tags` (array): Content tags
+  - `media_url` (string, optional): URL to associated media
+
+### Challenges List
+- **URL**: `/api/content/challenges/`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `difficulty` (integer, optional): Filter by difficulty level
+  - `age_group` (integer, optional): Filter by age group
+  - `search` (string, optional): Search query
+  - `ordering` (string, optional): Sort field
+  - `page` (integer, optional): Page number
+  - `page_size` (integer, optional): Items per page
+- **Output**:
+  - `count` (integer): Total number of challenges
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of challenge objects
+
+- **Method**: `POST` (Staff/Admin only)
+- **Input**:
+  - `title` (string): Challenge title
+  - `problem_statement` (string): Challenge description
+  - `expected_output` (string): Expected result
+  - `difficulty_base` (integer): Difficulty level (1-5)
+  - `age_group` (integer): Target age group ID
+  - `points` (integer): Points awarded for completion
+  - `tags` (array, optional): List of tags
+- **Output**: Created challenge object
+
+### Challenge Detail
+- **URL**: `/api/content/challenges/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Challenge ID
+  - `title` (string): Challenge title
+  - `problem_statement` (string): Challenge description
+  - `expected_output` (string): Expected result
+  - `difficulty_base` (integer): Difficulty level
+  - `age_group` (object): Target age group
+  - `points` (integer): Points awarded for completion
+  - `created_at` (datetime): Creation date
+  - `updated_at` (datetime): Last update date
+  - `tags` (array): Challenge tags
+  - `hints` (array): Available hints
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Staff/Admin only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated challenge object
+
+### Concept Notes List
+- **URL**: `/api/content/concept-notes/`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `concept` (string, optional): Filter by concept
+  - `reading_level` (string, optional): Filter by reading level
+  - `age_group` (integer, optional): Filter by age group
+  - `search` (string, optional): Search query
+  - `page` (integer, optional): Page number
+  - `page_size` (integer, optional): Items per page
+- **Output**:
+  - `count` (integer): Total number of concept notes
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of concept note objects
+
+- **Method**: `POST` (Staff/Admin only)
+- **Input**:
+  - `title` (string): Concept note title
+  - `concept` (string): Concept name
+  - `content` (string): Explanation content
+  - `reading_level` (string): Intended reading level
+  - `age_group` (integer): Target age group ID
+  - `examples` (string, optional): Example code or explanations
+  - `themed_explanation` (boolean, optional): Whether it uses a theme
+  - `theme` (string, optional): Theme used in explanation
+- **Output**: Created concept note object
+
+### Concept Note Detail
+- **URL**: `/api/content/concept-notes/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Concept note ID
+  - `title` (string): Concept note title
+  - `concept` (string): Concept name
+  - `content` (string): Explanation content
+  - `reading_level` (string): Intended reading level
+  - `age_group` (object): Target age group
+  - `examples` (string): Example code or explanations
+  - `themed_explanation` (boolean): Whether it uses a theme
+  - `theme` (string): Theme used in explanation
+  - `created_at` (datetime): Creation date
+  - `updated_at` (datetime): Last update date
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Staff/Admin only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated concept note object
+
+### Hints List
+- **URL**: `/api/content/challenges/{challenge_id}/hints/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total number of hints
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of hint objects
+
+- **Method**: `POST` (Staff/Admin only)
+- **Input**:
+  - `content` (string): Hint text
+  - `sequence_number` (integer): Order of hints
+  - `points_deduction` (integer, optional): Points deducted for using hint
+- **Output**: Created hint object
+
+### Hint Detail
+- **URL**: `/api/content/challenges/{challenge_id}/hints/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Hint ID
+  - `content` (string): Hint text
+  - `challenge` (integer): Challenge ID
+  - `sequence_number` (integer): Order of hints
+  - `points_deduction` (integer): Points deducted for using hint
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Staff/Admin only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated hint object
+
+### Age Group List
+- **URL**: `/api/content/age-groups/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total number of age groups
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of age group objects containing:
+    - `id` (integer): Age group ID
+    - `name` (string): Age group name
+    - `description` (string): Age group description
+    - `min_age` (integer): Minimum age
+    - `max_age` (integer): Maximum age
+
+### Content Recommendations
+- **URL**: `/api/content/recommendations/`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `count` (integer, optional): Number of recommendations (default: 5)
+  - `content_type` (string, optional): Filter by content type
+- **Output**:
+  - Array of content objects recommended for the user
+
+### Generate Hint
+- **URL**: `/api/content/challenges/{challenge_id}/generate-hint/`
+- **Method**: `POST`
+- **Input**:
+  - `user_attempt` (string): User's code attempt
+  - `hint_level` (integer, optional): Level of detail for hint (1-3, default: 1)
+- **Output**:
+  - `hint` (string): Generated hint text
+  - `points_deduction` (integer): Points that will be deducted
+
+## Progress Endpoints
+
+### User Progress List
+- **URL**: `/api/progress/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total progress records
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of progress objects
+
+### User Progress Detail
+- **URL**: `/api/progress/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Progress record ID
+  - `user` (integer): User ID
+  - `content` (object, optional): Content object if applicable
+  - `challenge` (object, optional): Challenge object if applicable
+  - `completion_percentage` (float): Completion percentage (0-100)
+  - `started_at` (datetime): Start time
+  - `completed_at` (datetime, optional): Completion time
+  - `points_earned` (integer): Points earned
+
+- **Method**: `PUT`/`PATCH`
+- **Input**:
+  - `completion_percentage` (float, optional): New completion percentage
+- **Output**: Updated progress object
+
+### Track Completion
+- **URL**: `/api/progress/track-completion/`
+- **Method**: `POST`
+- **Input**:
+  - `content_id` (integer, optional): Content ID
+  - `challenge_id` (integer, optional): Challenge ID
+  - `completion_percentage` (float): Completion percentage (0-100)
+- **Output**: Updated or new progress object
+
+### User Stats
+- **URL**: `/api/progress/stats/`
+- **Method**: `GET`
+- **Output**:
+  - `completed_count` (integer): Number of completed items
+  - `in_progress_count` (integer): Number of in-progress items
+  - `total_points` (integer): Total points earned
+  - `average_difficulty` (float): Average difficulty completed
+  - `recent_completion` (object): Recently completed content
+  - `joined_days` (integer): Days since joining
+
+### Learning Path
+- **URL**: `/api/progress/learning-path/`
+- **Method**: `GET`
+- **Output**:
+  - `learning_path` (array): List of recommended content objects
+  - `total_steps` (integer): Total number of steps in path
+  - `recommended_pace` (string): Recommended pace
+
+## Gamification Endpoints
+
+### Badges List
+- **URL**: `/api/gamification/badges/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total badges
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of badge objects
+
+### Badge Detail
+- **URL**: `/api/gamification/badges/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Badge ID
+  - `name` (string): Badge name
+  - `description` (string): Badge description
+  - `image_url` (string): URL to badge image
+  - `points_value` (integer): Points awarded for badge
+  - `is_achievement` (boolean): Whether it's an achievement badge
+
+### User Badges
+- **URL**: `/api/gamification/user-badges/`
+- **Method**: `GET`
+- **Output**:
+  - `earned_badges` (array): List of earned badge objects
+  - `unearned_badges` (array): List of unearned badge objects with progress
+
+### Leaderboard
+- **URL**: `/api/gamification/leaderboard/`
+- **Method**: `GET`
+- **Output**:
+  - `leaderboard` (array): List of top users with points
+  - `current_user_rank` (integer): Requesting user's rank
+  - `current_user_points` (integer): Requesting user's points
+
+### Award Badge
+- **URL**: `/api/gamification/award-badge/`
+- **Method**: `POST`
+- **Input**: None (checks for badges user qualifies for)
+- **Output**:
+  - `awarded` (array): Newly awarded badges
+  - `message` (string): Success/info message
+
+## Community Endpoints
+
+### Forum Topics List
+- **URL**: `/api/community/topics/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total topics
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of topic objects
+
+- **Method**: `POST`
+- **Input**:
+  - `title` (string): Topic title
+  - `description` (string): Topic description
+- **Output**: Created topic object
+
+### Forum Topic Detail
+- **URL**: `/api/community/topics/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Topic ID
+  - `title` (string): Topic title
+  - `description` (string): Topic description
+  - `created_by` (integer): Creator's user ID
+  - `created_by_username` (string): Creator's username
+  - `created_at` (datetime): Creation date
+  - `is_pinned` (boolean): Whether topic is pinned
+  - `is_closed` (boolean): Whether topic is closed
+  - `post_count` (integer): Number of posts
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Creator/Staff only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated topic object
+
+### Forum Posts List
+- **URL**: `/api/community/topics/{topic_id}/posts/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total posts
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of post objects
+
+- **Method**: `POST`
+- **Input**:
+  - `content` (string): Post content
+- **Output**: Created post object
+
+### Forum Post Detail
+- **URL**: `/api/community/posts/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Post ID
+  - `topic` (integer): Topic ID
+  - `content` (string): Post content
+  - `created_by` (integer): Creator's user ID
+  - `created_by_username` (string): Creator's username
+  - `created_at` (datetime): Creation date
+  - `updated_at` (datetime): Last update date
+  - `comment_count` (integer): Number of comments
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Creator/Staff only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated post object
+
+### Comments List
+- **URL**: `/api/community/posts/{post_id}/comments/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total comments
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of comment objects
+
+- **Method**: `POST`
+- **Input**:
+  - `content` (string): Comment content
+- **Output**: Created comment object
+
+### Comment Detail
+- **URL**: `/api/community/comments/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Comment ID
+  - `post` (integer): Post ID
+  - `content` (string): Comment content
+  - `created_by` (integer): Creator's user ID
+  - `created_by_username` (string): Creator's username
+  - `created_at` (datetime): Creation date
+
+- **Method**: `PUT`/`PATCH`/`DELETE` (Creator/Staff only)
+- **Input**: Same as POST for PUT/PATCH
+- **Output**: Updated comment object
+
+### Mentor Connections List
+- **URL**: `/api/community/mentors/`
+- **Method**: `GET`
+- **Output**:
+  - `count` (integer): Total connections
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of mentor connection objects
+
+- **Method**: `POST`
+- **Input**:
+  - `mentor` (integer): Mentor ID
+  - `goals` (string, optional): Connection goals
+- **Output**: Created mentor connection object
+
+### Mentor Connection Detail
+- **URL**: `/api/community/mentors/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Connection ID
+  - `mentor` (integer): Mentor ID
+  - `mentee` (integer): Mentee ID
+  - `mentee_username` (string): Mentee's username
+  - `mentor_name` (string): Mentor's display name
+  - `mentor_expertise` (string): Mentor's expertise
+  - `status` (string): Connection status
+  - `created_at` (datetime): Creation date
+  - `updated_at` (datetime): Last update date
+  - `goals` (string): Connection goals
+
+- **Method**: `PUT`/`PATCH`
+- **Input**:
+  - `status` (string, optional): New status (mentor can set to accepted/rejected)
+  - `goals` (string, optional): Updated goals
+- **Output**: Updated connection object
+
+### Role Models List
+- **URL**: `/api/community/role-models/`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `field` (string, optional): Filter by field
+  - `country` (string, optional): Filter by country
+- **Output**:
+  - `count` (integer): Total role models
+  - `next` (string): URL to next page
+  - `previous` (string): URL to previous page
+  - `results` (array): List of role model objects
+
+### Role Model Detail
+- **URL**: `/api/community/role-models/{id}/`
+- **Method**: `GET`
+- **Output**:
+  - `id` (integer): Role model ID
+  - `name` (string): Role model name
+  - `bio` (string): Role model biography
+  - `accomplishments` (string): Role model accomplishments
+  - `field` (string): Field of expertise
+  - `country` (string): Country
+  - `image` (string): URL to image
+  - `external_url` (string): URL to external resource
