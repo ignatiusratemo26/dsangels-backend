@@ -147,7 +147,7 @@ class MentorConnectionDetailView(generics.RetrieveUpdateAPIView):
             
         return super().update(request, *args, **kwargs)
 
-class RoleModelListView(generics.ListAPIView):
+class RoleModelListView(generics.ListCreateAPIView):
     """
     List women role models in tech to inspire users
     """
