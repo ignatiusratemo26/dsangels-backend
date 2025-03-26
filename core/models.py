@@ -4,6 +4,7 @@ from django.utils import timezone
 import json
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 class UserActivity(models.Model):
     # Activity types for tracking different user interactions
@@ -259,7 +260,7 @@ class BadgeRequirement(models.Model):
 
 class UserProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='progresses')
-    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='user_progresses')
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='user_progresses', null=True, blank=True)
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, related_name='user_progresses', null=True, blank=True)
     completion_percentage = models.FloatField(default=0.0)
     points_earned = models.IntegerField(default=0)
@@ -269,6 +270,13 @@ class UserProgress(models.Model):
     
     def __str__(self):
         return f"Progress of {self.user.username} on {self.content.title}"
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=Q(content__isnull=False) | Q(challenge__isnull=False),
+                name="at_least_one_content_or_challenge"
+            )
+        ]
 
 class UserPreference(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
