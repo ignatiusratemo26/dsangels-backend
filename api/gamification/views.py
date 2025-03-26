@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Sum, Count, F
 from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
+from core.models import UserActivity, Challenge, ConceptNote
 
 from core.models import Badge, User, UserProgress
 from core.serializers import BadgeSerializer
@@ -146,6 +148,116 @@ class LeaderboardView(APIView):
             'current_user_points': user_points
         })
 
+
+
+class TrackPointsView(APIView):
+    """
+    Track points earned from user activities
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        user = request.user
+        activity_type = request.data.get('activity_type')
+        points = request.data.get('points', 0)
+        metadata = request.data.get('metadata', {})
+        
+        if not activity_type:
+            return Response(
+                {'error': 'Activity type is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Find related content object if provided
+        content_object = None
+        content_type = None
+        object_id = None
+        
+        if 'challenge_id' in metadata:
+            try:
+                challenge_id = metadata['challenge_id']
+                # Convert to integer if it's a string
+                if isinstance(challenge_id, str):
+                    challenge_id = int(challenge_id)
+                content_object = Challenge.objects.get(id=challenge_id)
+                content_type = ContentType.objects.get_for_model(Challenge)
+                object_id = challenge_id
+            except (Challenge.DoesNotExist, ValueError):
+                pass
+                
+        elif 'concept_id' in metadata:
+            try:
+                concept_id = metadata['concept_id']
+                # Convert to integer if it's a string
+                if isinstance(concept_id, str):
+                    concept_id = int(concept_id)
+                content_object = ConceptNote.objects.get(id=concept_id)
+                content_type = ContentType.objects.get_for_model(ConceptNote)
+                object_id = concept_id
+            except (ConceptNote.DoesNotExist, ValueError):
+                pass
+        
+        # Clean up metadata to ensure it's serializable
+        cleaned_metadata = {}
+        for key, value in metadata.items():
+            if isinstance(value, (str, int, float, bool, list, dict)) or value is None:
+                cleaned_metadata[key] = value
+        
+        # Create activity record directly
+        activity = UserActivity.objects.create(
+            user=user,
+            activity_type='points',
+            content_type=content_type,
+            object_id=object_id,
+            data={
+                'points_earned': points,
+                'source_activity': activity_type,
+                'metadata': cleaned_metadata
+            }
+        )
+        
+        # Get updated points total for the user by extracting from the data JSONField
+        user_activities = UserActivity.objects.filter(
+            user=user,
+            activity_type='points'
+        )
+        
+        # Calculate total points by summing up points_earned from the data field
+        total_points = 0
+        for act in user_activities:
+            try:
+                points_value = act.data.get('points_earned', 0)
+                if isinstance(points_value, (int, float)):
+                    total_points += points_value
+            except (AttributeError, TypeError):
+                # Skip activities with missing or invalid data
+                pass
+        
+        # Check if user qualifies for new badges based on points
+        badges_awarded = []
+        if points > 0:
+            # This is simplified - you might want to add more logic here
+            for badge in Badge.objects.filter(requirements__requirement_type='points_threshold'):
+                if badge not in user.badges.all():
+                    for req in badge.requirements.filter(requirement_type='points_threshold'):
+                        if total_points >= req.threshold:
+                            user.badges.add(badge)
+                            badges_awarded.append(badge)
+                            break
+        
+        response_data = {
+            'success': True,
+            'points_earned': points,
+            'total_points': total_points
+        }
+        
+        if badges_awarded:
+            response_data['badges_awarded'] = BadgeSerializer(badges_awarded, many=True).data
+            response_data['message'] = f"You earned {len(badges_awarded)} new badge(s)!"
+        
+        return Response(response_data)
+    
+    
 class AwardBadgeView(APIView):
     """
     Check if user qualifies for badges and award them

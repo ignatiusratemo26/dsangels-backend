@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     BadgeListView, BadgeDetailView, 
     UserBadgesView, LeaderboardView,
-    AwardBadgeView
+    AwardBadgeView, TrackPointsView
 )
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('user-badges/', UserBadgesView.as_view(), name='user-badges'),
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     path('award-badge/', AwardBadgeView.as_view(), name='award-badge'),
+    path('track-points/', TrackPointsView.as_view(), name='track-points'),
 ]
