@@ -365,3 +365,12 @@ class MentorConnection(models.Model):
         return f"{self.mentee.username} -> {self.mentor.user.username} ({self.get_status_display()})"
 
 
+class ChatHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_history')
+    message = models.TextField()
+    is_user = models.BooleanField(default=True)  # True if user sent the message, False if bot
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = "Chat histories"
+        ordering = ['-timestamp']

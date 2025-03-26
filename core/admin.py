@@ -8,8 +8,16 @@ from .models import (
     User, UserActivity, AgeGroup, Parent, Mentor, Content, Challenge,
     ConceptNote, Hint, Badge, BadgeRequirement, UserProgress,
     UserPreference, Submission, ForumTopic, ForumPost, Comment,
-    RoleModel, MentorConnection
+    RoleModel, MentorConnection, ChatHistory
 )
+
+@admin.register(ChatHistory)
+class ChatHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message', 'is_user', 'timestamp')
+    search_fields = ('user', 'message')
+    list_filter = ('is_user',)
+    
+
 
 # Unregister the default Group model
 admin.site.unregister(Group)

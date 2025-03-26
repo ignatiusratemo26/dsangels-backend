@@ -11,6 +11,8 @@ urlpatterns = [
     path('api/gamification/', include('api.gamification.urls')),
     path('api/community/', include('api.community.urls')),
     path('api/analytics/', include('api.analytics.urls')),
+    path('api/chat/', include('api.chat.urls')),
+    path('api/users/', include('api.users.urls')),
 ]
 
 if settings.DEBUG:
